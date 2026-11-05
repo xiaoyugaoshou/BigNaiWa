@@ -183,13 +183,13 @@
 
     merge(tier) {
       const base = 240 * Math.pow(1.1225, tier * 2);
-      this.tone(base, base * 1.7, 0.2, 0.16, 'sine');
-      this.tone(base * 2, base * 3, 0.12, 0.06, 'triangle');
+      this.tone(base, base * 1.7, 0.22, 0.34, 'sine');
+      this.tone(base * 2, base * 3, 0.14, 0.16, 'triangle');
     },
 
-    drop()   { this.tone(180, 120, 0.08, 0.05, 'sine'); },
-    over()   { this.tone(420, 90, 0.7, 0.16, 'sawtooth'); },
-    bonus()  { [523, 659, 784, 1047].forEach((f, i) => setTimeout(() => this.tone(f, f, 0.22, 0.12, 'triangle'), i * 90)); }
+    drop()   { this.tone(190, 110, 0.11, 0.20, 'sine'); },
+    over()   { this.tone(420, 90, 0.7, 0.30, 'sawtooth'); },
+    bonus()  { [523, 659, 784, 1047].forEach((f, i) => setTimeout(() => this.tone(f, f, 0.22, 0.26, 'triangle'), i * 90)); }
   };
 
   /* 手机上的轻微震动反馈（跟着静音开关走；不支持的浏览器自动忽略） */
