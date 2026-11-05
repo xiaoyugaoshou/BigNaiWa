@@ -863,8 +863,33 @@
 
     /* —— 贴图模式：主体直接画 PNG，画布边长按 ASSET_FILL 换算，保证视觉大小 = 物理直径 —— */
     if (f.img) {
+      /* 等级色环：每一级一个颜色，一眼就能看出大小 */
+      const ringW = Math.max(2, r * 0.11);
+      c.beginPath();
+      c.arc(0, 0, r + ringW * 0.75, 0, Math.PI * 2);
+      c.lineWidth = ringW;
+      c.strokeStyle = f.c2;
+      c.stroke();
+
       const box = (r * 2) / ASSET_FILL;
       c.drawImage(f.img, -box / 2, -box / 2, box, box);
+
+      /* 等级数字：正着写字，不跟球一起转，保证随时能认出第几级 */
+      const fs = r * 0.46;
+      if (fs >= 8) {
+        c.save();
+        c.rotate(-(angle || 0));
+        c.font = 'bold ' + fs.toFixed(1) + 'px sans-serif';
+        c.textAlign = 'center';
+        c.textBaseline = 'middle';
+        c.lineWidth = Math.max(1.5, fs * 0.24);
+        c.strokeStyle = 'rgba(40,30,20,.72)';
+        c.fillStyle = '#ffffff';
+        c.strokeText(String(tier + 1), 0, r * 0.62);
+        c.fillText(String(tier + 1), 0, r * 0.62);
+        c.restore();
+      }
+
       c.restore();
       return;
     }
