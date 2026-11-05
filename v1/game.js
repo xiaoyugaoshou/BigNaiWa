@@ -201,17 +201,17 @@
     timer: null,
     step: 0,
     playing: false,
-    notes: [523, 587, 659, 784, 880, 784, 659, 587,
-            523, 587, 659, 784, 880, 1047, 880, 784],
-    bass:  [262, 0, 0, 0, 330, 0, 0, 0, 262, 0, 0, 0, 294, 0, 0, 0],
+    notes: [523, 659, 784, 1047, 880, 784, 659, 523,
+            587, 659, 880, 1047, 1175, 1047, 880, 659],
+    bass:  [131, 0, 131, 0, 165, 0, 165, 0, 131, 0, 131, 0, 147, 0, 147, 0],
 
     tick() {
       if (Sound.muted) return;
       const i = this.step % this.notes.length;
       const f = this.notes[i];
-      if (f) Sound.tone(f, f, 0.55, 0.055, 'sine');
+      if (f) Sound.tone(f, f, 0.13, 0.06, 'square');
       const b = this.bass[i];
-      if (b) Sound.tone(b, b, 1.2, 0.04, 'triangle');
+      if (b) Sound.tone(b, b, 0.28, 0.05, 'triangle');
       this.step++;
     },
 
@@ -220,7 +220,7 @@
       Sound.ensure();
       this.playing = true;
       this.tick();
-      this.timer = setInterval(() => this.tick(), 800);
+      this.timer = setInterval(() => this.tick(), 420);
     },
 
     stop() {
