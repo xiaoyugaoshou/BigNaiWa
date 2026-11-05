@@ -209,9 +209,9 @@
       if (Sound.muted) return;
       const i = this.step % this.notes.length;
       const f = this.notes[i];
-      if (f) Sound.tone(f, f, 0.13, 0.06, 'square');
+      if (f) Sound.tone(f, f, 0.13, 0.14, 'square');
       const b = this.bass[i];
-      if (b) Sound.tone(b, b, 0.28, 0.05, 'triangle');
+      if (b) Sound.tone(b, b, 0.28, 0.09, 'triangle');
       this.step++;
     },
 
