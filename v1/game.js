@@ -192,6 +192,48 @@
     bonus()  { [523, 659, 784, 1047].forEach((f, i) => setTimeout(() => this.tone(f, f, 0.22, 0.26, 'triangle'), i * 90)); }
   };
 
+  /* ---------------------------------------------------------
+   *  背景音乐（同样是 WebAudio 合成，无外部音频文件）
+   *  五声音阶的小循环，音量压得很低，只做氛围，不抢音效
+   * ------------------------------------------------------- */
+
+  const Bgm = {
+    timer: null,
+    step: 0,
+    playing: false,
+    notes: [523, 587, 659, 784, 880, 784, 659, 587,
+            523, 587, 659, 784, 880, 1047, 880, 784],
+    bass:  [262, 0, 0, 0, 330, 0, 0, 0, 262, 0, 0, 0, 294, 0, 0, 0],
+
+    tick() {
+      if (Sound.muted) return;
+      const i = this.step % this.notes.length;
+      const f = this.notes[i];
+      if (f) Sound.tone(f, f, 0.55, 0.055, 'sine');
+      const b = this.bass[i];
+      if (b) Sound.tone(b, b, 1.2, 0.04, 'triangle');
+      this.step++;
+    },
+
+    start() {
+      if (Sound.muted || this.playing) return;
+      Sound.ensure();
+      this.playing = true;
+      this.tick();
+      this.timer = setInterval(() => this.tick(), 800);
+    },
+
+    stop() {
+      this.playing = false;
+      if (this.timer) { clearInterval(this.timer); this.timer = null; }
+    }
+  };
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) Bgm.stop();
+    else if (!Sound.muted) Bgm.start();
+  });
+
   /* 手机上的轻微震动反馈（跟着静音开关走；不支持的浏览器自动忽略） */
   function haptic(ms) {
     if (Sound.muted) return;
@@ -1220,6 +1262,7 @@
   stage.addEventListener('pointerdown', (e) => {
     if (state.over) return;
     Sound.ensure();
+    Bgm.start();
     moveAim(pointerToX(e.clientX));
     if (e.pointerType === 'touch') {
       touchAiming = true;
@@ -1284,7 +1327,7 @@
     Sound.muted = !Sound.muted;
     localStorage.setItem(MUTE_KEY, Sound.muted ? '1' : '0');
     paintSoundBtn();
-    if (!Sound.muted) Sound.merge(1);
+    if (!Sound.muted) { Sound.merge(1); Bgm.start(); } else { Bgm.stop(); }
   });
 
   resetBtn.addEventListener('click', reset);
